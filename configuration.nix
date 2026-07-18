@@ -136,8 +136,9 @@ in
     mode = "0755";
   };
 
-  programs.kdeconnect.enable = true;
+  environment.shellAliases.nrs = "sudo nixos-rebuild switch --flake ~/nixos-config#carbon";
 
+  programs.kdeconnect.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
