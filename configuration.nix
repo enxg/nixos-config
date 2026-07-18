@@ -68,10 +68,16 @@ in
 
   services.xserver.enable = false;
 
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
-  services.displayManager.sddm.autoNumlock = true;
+  #services.displayManager.sddm.enable = true;
+  #services.displayManager.sddm.wayland.enable = true;
+  #services.displayManager.sddm.autoNumlock = true;
   services.desktopManager.plasma6.enable = true;
+  services.displayManager.plasma-login-manager.enable = true;
+  services.displayManager.plasma-login-manager.settings = {
+    Keyboard = {
+      NumLock = 0;
+    };
+  };
 
   # Configure console keymap
   console.keyMap = "trq";
@@ -172,6 +178,20 @@ in
     nerd-fonts.jetbrains-mono
     inter
   ];
+
+  systemd.services.numlockOnTty = {
+    description = "Enable NumLock on TTYs";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "numlock-on-tty" ''
+        for tty in /dev/tty{1..6}; do
+          ${pkgs.kbd}/bin/setleds -D +num < "$tty";
+        done
+      '';
+    };
+  };
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
