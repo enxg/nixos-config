@@ -5,12 +5,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  hyperfluent = pkgs.fetchFromGitHub {
-    owner = "Coopydood";
-    repo = "HyperFluent-GRUB-Theme";
-    rev = "main";
-    hash = "sha256-l6oZqo6ATv9DWUKAe3fgx3c12SOX0qaqfwd3ppcdUZk=";
-  };
+
 in
 
 {
@@ -18,17 +13,17 @@ in
     [ ./hardware-configuration.nix ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = false;
-  boot.loader.grub = {
+  boot.loader.limine = {
     enable = true;
-    efiSupport = true;
-    device = "nodev";
-    useOSProber = true;
-    theme = "${hyperfluent}/nixos";
-    gfxmodeEfi = "1920x1080";
-    default = "saved";
+    secureBoot.enable = true;
+    maxGenerations = 5;
+    extraEntries = ''
+      /Windows
+          protocol: efi_chainload
+          path: uuid(F667-A141)://EFI/Microsoft/Boot/bootmgfw.efi
+    '';
     extraConfig = ''
-      GRUB_SAVEDEFAULT=true
+      remember_last_entry: yes
     '';
   };
   boot.loader.efi.efiSysMountPoint = "/boot";
@@ -36,8 +31,7 @@ in
 
   boot.supportedFilesystems = [ "ntfs" ];
 
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_6_18;
 
   networking.hostName = "carbon";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -146,10 +140,15 @@ in
 
   programs.kdeconnect.enable = true;
 
+  hardware.tuxedo-drivers.enable = true;
+  hardware.tuxedo-control-center.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   neovim wget curl htop btop ripgrep fd jq unzip p7zip fastfetch patchelf
+
+  sbctl
 
   (vivaldi.override {
     proprietaryCodecs = false; # FIXME: Enable after codecs get updated
@@ -164,12 +163,12 @@ in
   go
   jetbrains-toolbox
   spotify
-  discord
   starship
   inkscape mpv obs-studio
   ferdium
   insomnia
   claude-code
+  discord
   ];
 
   virtualisation.docker.enable = true;
