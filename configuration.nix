@@ -20,10 +20,7 @@ in
     extraEntries = ''
       /Windows
           protocol: efi_chainload
-          path: uuid(F667-A141)://EFI/Microsoft/Boot/bootmgfw.efi
-    '';
-    extraConfig = ''
-      remember_last_entry: yes
+          path: uuid(e24a4eb2-87da-4347-8714-306994f0c628)://EFI/Microsoft/Boot/bootmgfw.efi
     '';
   };
   boot.loader.efi.efiSysMountPoint = "/boot";
@@ -169,6 +166,8 @@ in
   insomnia
   claude-code
   discord
+  gcc gnumake
+  nodejs yarn
   ];
 
   virtualisation.docker.enable = true;
