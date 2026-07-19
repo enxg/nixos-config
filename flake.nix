@@ -6,7 +6,7 @@
     tuxedo-nixos.url = "github:sund3RRR/tuxedo-nixos";
   };
 
-  outputs = { self, nixpkgs, tuxedo-nixos, nix-flatpak, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, tuxedo-nixos, ... }@inputs: {
     nixosConfigurations.carbon = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [

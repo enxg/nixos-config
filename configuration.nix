@@ -103,7 +103,7 @@ in
     fsType = "ntfs-3g";
     options = [
       "rw" "uid=1000" "gid=100"
-      "dmask=022" "fmask=133"
+      "dmask=022" "fmask=022"
       "nofail" "x-systemd.automount"
       "big_writes"
     ];
