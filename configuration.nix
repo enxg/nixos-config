@@ -28,6 +28,24 @@ in
 
   boot.supportedFilesystems = [ "ntfs" ];
 
+  swapDevices = [{
+    device = "/var/lib/swapfile";
+    size = 8 * 1024;
+  }];
+
+  zramSwap = {
+    enable = true;
+    memoryPercent = 25;
+  };
+
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 10;
+  };
+
+  fileSystems."/".options = [ "compress=zstd:1" "noatime" ];
+  fileSystems."/home".options = [ "compress=zstd:1" "noatime" ];
+  fileSystems."/nix".options = [ "compress=zstd:1" "noatime" ];
+
   boot.kernelPackages = pkgs.linuxPackages_6_18;
 
   networking.hostName = "carbon";
@@ -44,6 +62,7 @@ in
   i18n.defaultLocale = "en_GB.UTF-8";
 
   i18n.extraLocaleSettings = {
+    LC_CTYPE = "en_GB.UTF-8";
     LC_ADDRESS = "tr_TR.UTF-8";
     LC_IDENTIFICATION = "tr_TR.UTF-8";
     LC_MEASUREMENT = "tr_TR.UTF-8";
