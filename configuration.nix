@@ -70,6 +70,26 @@ in
     };
   };
 
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = true;
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+    prime = {
+      sync.enable = true;
+      intelBusId  = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
+  };
+
   # Configure console keymap
   console.keyMap = "trq";
 
@@ -140,6 +160,15 @@ in
   hardware.tuxedo-drivers.enable = true;
   hardware.tuxedo-control-center.enable = true;
 
+  programs.nix-ld.enable = true;
+
+  services.flatpak.enable = true;
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.kdePackages.xdg-desktop-portal-kde ];
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -165,9 +194,10 @@ in
   ferdium
   insomnia
   claude-code
-  discord
+  discord vesktop
   gcc gnumake
   nodejs yarn
+  prusa-slicer
   ];
 
   virtualisation.docker.enable = true;
